@@ -1,33 +1,46 @@
-import styled from 'styled-components'
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
+import firebase from "../firebase_utils";
 
 const Header = () => {
-	return <HeaderContainer>
-		<Logo>Code Snippeter</Logo>
-		<SearchBox placeholder="Search Snippet by filename" type="text" />
-		<Button>Login</Button>
-	</HeaderContainer>
-}
+  const { currentUser } = useAuth();
+  return (
+    <HeaderContainer>
+      <Link to="/">
+        <Logo>Code Snippeter</Logo>
+      </Link>
+      {currentUser ? (
+        <Link to="/">
+          <Button onClick={() => firebase.auth().signOut()}>Logout</Button>
+        </Link>
+      ) : (
+        <Link to="/login">
+          <Button>Login</Button>
+        </Link>
+      )}
+    </HeaderContainer>
+  );
+};
 
 const HeaderContainer = styled.div`
-	width: 100%;
-	height: 4rem;
-	padding: 1rem;
-	display: flex;
-	align-items: center;
+  width: 100%;
+  height: 4rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
 `;
 
 const Logo = styled.p`
-	font-family: 'Teko', sans-serif;
-	font-size: 1.2rem;
+  font-family: "Teko", sans-serif;
+  font-size: 1.2rem;
 `;
 
-const SearchBox = styled.input`
-	flex: 1;
-	border: 1px solid gray;
-	border-radius: 5px;
-	margin: 1rem;
-`
 const Button = styled.button`
-	padding: 20px;
+  padding: 5px;
+  cursor: pointer;
 `;
+
 export default Header;
